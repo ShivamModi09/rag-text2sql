@@ -1,0 +1,22 @@
+# preprocessing
+langchain-community
+langchain-core
+langchain
+pymysql
+
+# ragas
+ragas==0.4.3
+sentence-transformers
+datasets
+
+# api-keys
+python-dotenv
+
+# llm
+langchain-google-genai
+openai
+
+# deployment
+streamlit
+fastapi
+uvicorn
