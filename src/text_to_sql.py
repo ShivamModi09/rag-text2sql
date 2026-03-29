@@ -8,7 +8,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
 # Connecting MySQL database
-host = "localhost"
+host = os.getenv("DB_HOST", "localhost")   # use localhost when run manually, but switch to the Docker service name automatically
 port = "3306"
 username = "root"
 password = os.getenv("SQL_PASSWORD")
