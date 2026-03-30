@@ -3,7 +3,9 @@ __pycache__
 .git
 .env
 .DS_Store
-data
+data/*.csv
 demo.gif
+README.md
 .spyproject
 .gitignore
+.env.example
