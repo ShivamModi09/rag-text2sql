@@ -1,128 +1,159 @@
-# Text to SQL RAG System
+# 📊 rag-text2sql
 
-This project converts natural language questions into SQL queries using an LLM and retrieves answers from a database.
+**AI-Powered Natural Language to SQL with Self-Correction**
+
+![rag-text2sql Demo](demo.gif)
+
+rag-text2sql is a high-performance RAG system that converts natural language questions into validated, self-correcting SQL queries. It bridges the gap between non-technical users and databases by generating precise SQL, applying safety checks, automatically fixing errors, and returning accurate database-backed answers through a production-ready FastAPI, Streamlit, LangChain, RAGAS, and MySQL setup.
+
+---
 
 ## Architecture
 
-User
+```text
+[ User ] ──▶ [ Streamlit UI ] ──▶ [ FastAPI Backend ]
+                                         │
+    ┌────────────────────────────────────┘
+    ▼
+[ LangChain SQL Chain ] ──▶ [ SQL Guardrail ] ──▶ [ Self-Correction Loop ]
+                                                         │
+    ┌────────────────────────────────────────────────────┘
+    ▼
+[ MySQL Database ] ──▶ [ RAGAS Evaluation ] ──▶ [ Final Answer ]
+```
 
-↓
-
-Streamlit UI
-
-↓
-
-FastAPI Backend
-
-↓
-
-LangChain SQL Chain
-
-↓
-
-SQL Guardrail & Validation  
-
-↓
-
-SQL Self-Correction Loop  
-
-↓
-
-MySQL Database Execution  
-
-↓
-
-RAGAS Evaluation
+---
 
 ## Tech Stack
 
-* Python
-* FastAPI
-* Streamlit
-* LangChain
-* RAGAS
-* Google Gemini & Groq (LLM)
-* HuggingFace Embeddings
-* MySQL
+| Component        | Technology             |
+| ---------------- | ---------------------- |
+| Language         | Python 3.11            |
+| Backend API      | FastAPI, Uvicorn       |
+| Frontend UI      | Streamlit              |
+| Orchestration    | LangChain              |
+| LLMs             | Google Gemini & Groq   |
+| Database	   | MySQL 8.0 & Workbench  |
+| Evaluation       | RAGAS                  |
+| Containerization | Docker, Docker Compose |
 
-## Run Locally
+---
 
-### 1. Clone repository
+## Key Features
 
-git clone https://github.com/ShivamModi09/rag-text2sql.git  
+* Natural language to SQL generation
+* SQL safety guardrail to block unsafe queries
+* Automatic SQL self-correction if a query fails
+* Real database execution with MySQL
+* RAG-based evaluation using RAGAS
+* Simple Streamlit-based interface
+* Multi-stage Docker setup for cleaner deployment
+
+---
+
+## Project Structure
+
+```text
+rag-text2sql/
+├── app.py              # FastAPI backend
+├── frontend.py         # Streamlit UI
+├── src/                # Core logic and SQL chains
+├── data/               # DB schema and CSV files
+│   ├── init.sql
+│   └── *.csv
+├── Dockerfile          # Multi-stage build
+├── docker-compose.yml  # Service orchestration
+├── requirements.txt    # Project Dependencies
+├── .env.example
+├── README.md
+└── .dockerignore
+```
+
+---
+
+## How to run
+
+### Option 1: Run with Docker (Recommended)
+
+Use this to launch the full stack: database + API + UI.
+
+```bash
+git clone https://github.com/ShivamModi09/rag-text2sql.git
 cd rag-text2sql
+cp .env.example .env
+# Add your API keys to .env
+docker compose up -d
+```
 
-### 2. Install dependencies
+**Open:**
 
-pip install -r requirements.txt
+* UI: `http://localhost:8501`
+* API Docs: `http://localhost:8000/docs`
 
-### 3. Create MySQL database
+### Option 2: Run locally for development
 
-Create a database named:
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt 
+uvicorn app:app --reload 
+streamlit run frontend.py 
+```
 
-text_to_sql
+### After making changes
 
-### 4. Import CSV data into MySQL
+```bash
+docker compose up -d --build
+```
 
-Import the CSV files from the `data/` folder into the database tables.
+### Stop the app
 
-Example tables:
-- products
-- customers
-- regions
-- sales_order
-- state_regions
-- 2017_budgets
+```bash
+docker compose down
+```
 
-### 5. Run backend API
+---
 
-uvicorn app:app --reload
-
-### 6. Run frontend UI
-
-streamlit run frontend.py
-
-## Example Question
-
-"What is the budget for Product 12?"
-
-The system converts the question into SQL and queries the database.
-
-## Features
-
-* Natural language → SQL generation
-* SQL safety guardrail (blocks unsafe queries)
-* Automatic SQL self-correction if query fails
-* Database querying
-* RAG evaluation using RAGAS
-* Simple UI using Streamlit
-
-# Evaluation
+## Evaluation
 
 The system is evaluated using **RAGAS** to measure:
 
-- Faithfulness
-- Answer relevance
-- Context precision
-- Context recall
+* Faithfulness
+* Answer relevance
+* Context precision
+* Context recall
 
 Run evaluation:
 
+```bash
 python ragas_evaluation.py
+```
 
 Example result:
 
+```json
 {
- "maliciousness": 1.0,
- "helpfullness": 4.6,
- "context_precision": 0.8,
- "faithfulness": 0.8667
+  "maliciousness": 1.0,
+  "helpfulness": 4.6,
+  "context_precision": 0.8,
+  "faithfulness": 0.8667
 }
+```
 
-## Demo
+---
 
-![Demo](demo.gif)
+## Docker / Deployment Highlights
 
-# Author
+This project uses a **multi-stage build** strategy to optimize cloud deployment and local performance:
 
-Shivam Modi
+* CPU-only optimization to avoid unnecessary GPU drivers
+* Pre-seeded MySQL database with schema and source data
+* Smaller final image through multi-stage layering
+* Final image reduced from **2.1GB** to **516MB**
+
+---
+
+## Author
+
+**Shivam Modi**
+
+Software Developer
