@@ -95,7 +95,8 @@ fix_chain = (
 
 # Basic SQL safety guardrail - allows only single SELECT queries
 def validate_sql(query: str):    
-    q = query.strip().upper()
+    q = query.strip().rstrip(";")
+    q = q.upper()
     # Block multiple queries
     if ";" in q:
         raise ValueError("Multiple SQL statements are not allowed")
