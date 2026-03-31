@@ -66,6 +66,7 @@ rag-text2sql/
 ├── requirements.txt    # Project Dependencies
 ├── .env.example
 ├── README.md
+├── agentic_approach.py # Optional agentic SQL workflow
 └── .dockerignore
 ```
 
@@ -110,6 +111,24 @@ docker compose up -d --build
 
 ```bash
 docker compose down
+```
+
+---
+
+## Agentic Approach (Optional)
+
+Along with the main RAG-style SQL pipeline, this project also includes an experimental agentic SQL workflow in `agentic_approach.py`.
+
+This script uses LangGraph’s ReAct-style agent with SQL tools to:
+* inspect the database schema
+* generate SQL through tool-based reasoning
+* execute queries step by step
+* show the agent’s intermediate tool calls and final answer
+
+Run it separately with:
+
+```bash
+python agentic_approach.py
 ```
 
 ---
